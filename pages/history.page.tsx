@@ -1,9 +1,9 @@
 import {Meta} from "./lib/meta";
-import {Layout} from "./lib/layout";
+import {Page} from "./lib/page";
 
 export default () => {
     return <>
         <Meta title={'History'}/>
-        <Layout></Layout>
+        <Page></Page>
     </>
 };

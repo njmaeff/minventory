@@ -1,17 +1,33 @@
-import React from 'react';
-import {AppProvider} from '@shopify/polaris';
-import enTranslations from '@shopify/polaris/locales/en.json';
-import '@shopify/polaris/build/esm/styles.css';
-import "./lib/styles.scss"
+import Head from 'next/head';
+import "./lib/styles/antd.css"
+import {QueryClient, QueryClientProvider} from "react-query";
+import createCache from "@emotion/cache";
+import {CacheProvider} from "@emotion/react";
+import {ThemeEnvironment} from "./lib/styles/theme";
 
-export const App = ({Component, pageProps}) => {
+export default ({
+                    Component,
+                    pageProps,
+                    emotionCache = createCache({key: 'css'})
+                }) => {
+    const Layout = Component.getLayout ?? (({children}) => <>{children}</>)
+
     return (
-        <AppProvider
-            i18n={enTranslations}
-            colorScheme={'light'}
-        >
-            <Component {...pageProps} />
-        </AppProvider>
+        <>
+            <Head>
+                <title>Inventory Mini</title>
+                <meta name="viewport"
+                      content="width=device-width, initial-scale=1, maximum-scale=1"/>
+            </Head>
+            <CacheProvider value={emotionCache}>
+                <QueryClientProvider client={new QueryClient()}>
+                    <ThemeEnvironment>
+                        <Layout>
+                            <Component {...pageProps} />
+                        </Layout>
+                    </ThemeEnvironment>
+                </QueryClientProvider>
+            </CacheProvider>
+        </>
     );
 }
-export default App
