@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Form, Input, InputNumber, Popconfirm, Table, Typography} from 'antd';
+import {Form, Input, InputNumber, Space, Table, Typography} from 'antd';
 
 interface Item {
     key: string;
@@ -80,6 +80,10 @@ export const EditableTable = () => {
         setEditingKey('');
     };
 
+    const remove = (key: string) => {
+
+    };
+
     const save = async (key: React.Key) => {
         try {
             const row = (await form.validateFields()) as Item;
@@ -131,23 +135,29 @@ export const EditableTable = () => {
             title: 'operation',
             dataIndex: 'operation',
             render: (_: any, record: Item) => {
-                const editable = isEditing(record);
-                return editable ? (
-                    <span>
-            <Typography.Link onClick={() => save(record.key)}
-                             style={{marginRight: 8}}>
+                return <Space size={'small'}>
+                    {isEditing(record) ? (
+                        <span>
+            <Typography.Link onClick={() => save(record.key)}>
               Save
             </Typography.Link>
-            <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
-              <a>Cancel</a>
-            </Popconfirm>
+            <Typography.Link onClick={() => cancel()}>
+              Cancel
+            </Typography.Link>
           </span>
-                ) : (
-                    <Typography.Link disabled={editingKey !== ''}
-                                     onClick={() => edit(record)}>
-                        Edit
-                    </Typography.Link>
-                );
+                    ) : (
+                        <>
+                            <Typography.Link disabled={editingKey !== ''}
+                                             onClick={() => edit(record)}>
+                                Edit
+                            </Typography.Link>
+                            <Typography.Link onClick={() => remove(record.key)}>
+                                Remove
+                            </Typography.Link>
+                        </>
+                    )}
+
+                </Space>;
             },
         },
     ];
