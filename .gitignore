@@ -177,3 +177,4 @@ src/**/*.js
 root
 .rollup.cache
 
+db.json

@@ -1,5 +1,14 @@
 import React, {useState} from 'react';
-import {Form, Input, InputNumber, Space, Table, Typography} from 'antd';
+import {
+    Button,
+    Form,
+    Input,
+    InputNumber,
+    Modal,
+    Space,
+    Table,
+    Typography
+} from 'antd';
 
 interface Item {
     key: string;
@@ -65,23 +74,26 @@ const EditableCell: React.FC<EditableCellProps> = ({
 };
 
 export const EditableTable = () => {
-    const [form] = Form.useForm();
+    const [form] = Form.useForm<Omit<Item, 'key'>>();
     const [data, setData] = useState(originData);
     const [editingKey, setEditingKey] = useState('');
+    const [removeItem, setRemoveItem] = useState(null)
 
     const isEditing = (record: Item) => record.key === editingKey;
 
     const edit = (record: Partial<Item> & { key: React.Key }) => {
-        form.setFieldsValue({name: '', age: '', address: '', ...record});
+        form.setFieldsValue({
+            name: '',
+            description: '',
+            sku: '',
+            price: 0,
+            ...record
+        });
         setEditingKey(record.key);
     };
 
     const cancel = () => {
         setEditingKey('');
-    };
-
-    const remove = (key: string) => {
-
     };
 
     const save = async (key: React.Key) => {
@@ -151,7 +163,8 @@ export const EditableTable = () => {
                                              onClick={() => edit(record)}>
                                 Edit
                             </Typography.Link>
-                            <Typography.Link onClick={() => remove(record.key)}>
+                            <Typography.Link
+                                onClick={() => setRemoveItem(record)}>
                                 Remove
                             </Typography.Link>
                         </>
@@ -179,21 +192,36 @@ export const EditableTable = () => {
     });
 
     return (
-        <Form form={form} component={false}>
-            <Table
-                components={{
-                    body: {
-                        cell: EditableCell,
-                    },
-                }}
-                bordered
-                dataSource={data}
-                columns={mergedColumns}
-                rowClassName="editable-row"
-                pagination={{
-                    onChange: cancel,
-                }}
-            />
-        </Form>
+        <>
+            <Button>Add Row</Button>
+            <Form form={form} component={false}>
+                <Modal
+                    visible={removeItem}
+                    onCancel={() => setRemoveItem(null)}
+                    onOk={() => {
+
+                        setRemoveItem(null)
+                    }}
+                    maskClosable={false}
+                    title={'Remove Item?'}
+                >
+                    {removeItem?.name}
+                </Modal>
+                <Table
+                    components={{
+                        body: {
+                            cell: EditableCell,
+                        },
+                    }}
+                    bordered
+                    dataSource={data}
+                    columns={mergedColumns}
+                    rowClassName="editable-row"
+                    pagination={{
+                        onChange: cancel,
+                    }}
+                />
+            </Form>
+        </>
     );
 };

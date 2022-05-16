@@ -47,18 +47,16 @@ export class BrowserClient implements ReplitClient {
 
     async list(prefix?: string): Promise<string[]> {
         const {data: keys} = await sendData({
-            method: 'list'
+            method: 'list',
+            prefix
         })
-        if (prefix) {
-            return keys.filter((key) => key.startsWith(prefix));
-        } else {
-            return keys
-        }
+        return keys
     }
 
     async set(key: string, value: any): Promise<this> {
         await sendData({
             method: 'set',
+            key,
             value
         })
         return this
