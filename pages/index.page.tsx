@@ -6,8 +6,6 @@ export default () => {
     return <>
         <Meta title={'Inventory'}/>
         <Page>
-
-            Test
         </Page>
     </>
 };
