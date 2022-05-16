@@ -13,11 +13,7 @@ export const withTablet: MediaFunction = (theme, defs) => css`
 export const GlobalStyles = () => {
 
     return <Global styles={(theme) => css`
-        /* https://fonts.google.com/specimen/Rubik?query=rubik */
-        @import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
-
         :root {
-            font-family: 'Rubik', sans-serif;
             overscroll-behavior: contain;
         }
 
