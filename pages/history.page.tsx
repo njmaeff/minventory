@@ -19,6 +19,9 @@ export default () => {
         <Meta title={'History'}/>
         <Page>
             {historyGetAll.isSuccess ? <Table
+                pagination={{
+                    pageSize: 8,
+                }}
                 columns={[
                     {
                         title: 'Operation',
