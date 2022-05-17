@@ -145,14 +145,14 @@ export const EditableTable = () => {
             render: (_: any, record: Item) => {
                 return <Space size={'small'}>
                     {isEditing(record) ? (
-                        <span>
-            <Typography.Link onClick={() => save(record.id)}>
-              Save
-            </Typography.Link>
-            <Typography.Link onClick={() => cancel()}>
-              Cancel
-            </Typography.Link>
-          </span>
+                        <>
+                            <Typography.Link onClick={() => save(record.id)}>
+                                Save
+                            </Typography.Link>
+                            <Typography.Link onClick={() => cancel()}>
+                                Cancel
+                            </Typography.Link>
+                        </>
                     ) : (
                         <>
                             <Typography.Link disabled={editingKey !== ''}
