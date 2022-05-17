@@ -1,4 +1,4 @@
-import {ReplitClient} from "./replitClient";
+import {ReplitClient} from "./types";
 import axios from "axios";
 
 export const sendData = (data) => {

@@ -1,4 +1,4 @@
-import {ReplitClient} from "../../lib/db/replitClient";
+import {ReplitClient} from "../../lib/db/types";
 import path from "path";
 import {readFileSync, writeFileSync} from "fs"
 

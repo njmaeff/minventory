@@ -1,4 +1,4 @@
-import {ReplitClient} from "./replitClient";
+import {ReplitClient} from "./types";
 import {v4 as uuidV4} from "uuid"
 
 export class Orm<T extends Record<string, any>, Doc extends { key: string } = (T & { key: string })> {

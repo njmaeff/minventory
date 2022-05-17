@@ -3,7 +3,7 @@ import {DbLocal} from "./dbLocal";
 import {Client} from "@replit/database";
 import {Orm} from "../../lib/db/orm";
 import {Models} from "../../lib/types";
-import {ReplitClient} from "../../lib/db/replitClient";
+import {ReplitClient} from "../../lib/db/types";
 import {range} from "lodash";
 
 faker.seed(19)
