@@ -97,6 +97,13 @@ export const EditableTable: React.FC<{ initialData: Item[] }> = ({initialData}) 
             }
 
             await inventoryModel.write(update)
+            await historyModel.write({
+                record: newData[index],
+                operation: 'edit',
+                date: update.date,
+                model: 'inventory',
+                comment: 'Edit Item'
+            })
             newData.splice(index, 1, update);
             setData(newData);
             setEditingKey('');
@@ -184,14 +191,15 @@ export const EditableTable: React.FC<{ initialData: Item[] }> = ({initialData}) 
                 visible={addItem}
                 onCancel={() => setAddItem(false)}
                 onOk={async (item) => {
+                    const date = new Date().getTime();
                     const key = await inventoryModel.write({
                         ...item,
-                        date: new Date().getTime()
+                        date
                     })
                     const record = {...item, key}
                     await historyModel.write({
                         comment: 'New Item',
-                        date: new Date().getTime(),
+                        date,
                         model: 'inventory',
                         operation: 'create'
                     })

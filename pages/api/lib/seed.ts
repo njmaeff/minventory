@@ -25,8 +25,16 @@ const seed = async () => {
     const history = orm.collection('history');
 
     await Promise.all(
-        range(25).map(() => {
-            inventory.write(makeInventory())
+        range(25).map(async () => {
+            const record = makeInventory()
+            const key = await inventory.write(record)
+            await history.write({
+                comment: 'New Item',
+                date: record.date,
+                model: 'inventory',
+                operation: 'create',
+                record: {...record, key}
+            })
         })
     );
 

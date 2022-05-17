@@ -12,7 +12,9 @@ export default () => {
         <Meta title={'Inventory'}/>
         <Page>
             {inventoryGetAll.isSuccess ?
-                <EditableTable initialData={data}/> : <Spinner/>}
+                <EditableTable
+                    initialData={data.sort((a, b) => a.date <= b.date ? 1 : -1)}/> :
+                <Spinner/>}
         </Page>
     </>
 };
