@@ -1,22 +1,48 @@
-# Spacetagram
-See the app in action at [https://spacetagram.jmaeff.ca](https://spacetagram.jmaeff.ca).
+# Minventory
+Minventory is a simple application enabling users to create, edit, and remove items. Users can revert edits, deletions, and the creation of inventory items on the `history` page.
 
-## Usage
-Discover astronomy photos and like your favorites. Under the "Discover" menu, view the current picture of the day. You may select a random entry by clicking the "Random" button. View your saved favorites under the "Liked" menu.
 
 ## Features
 
-### Save Your Favorites
-Save your favorite photos with browser local storage.
+- CRUD (create, read, update, delete) functionality for inventory items
+- Ability to add comments to a deleted item and revert the deletion.
 
-### Dark / Light Theme
-Toggle the dark and light theme's using the palette button on the top right corner of the screen.
+## Stack
+This app is a full-stack application, so we need a database and intermediate API for the front-end to speak to the database.
 
-### View Your Favorites and Search
-View your saved favorites under the "Liked" menu and use the search to find a saved choice using keywords. The search uses [React InstantSearch](https://www.algolia.com/doc/guides/building-search-ui/what-is-instantsearch/react/) under the hood with a custom search client to use results saved in memory.
+### Database
+The production database for this application is the [Replit Database](https://docs.replit.com/hosting/using-a-database) which is a primitive key-value store.
 
-Spacetagram only renders the first ten saved results to save resources. When the user reaches the bottom of the page, the app renders the following ten results.
+We can use a local `db.json` file that functionally acts like a key-value store for development. We have a unique client for using this database located here [pages/api/lib/dbLocal.ts](pages/api/lib/dbLocal.ts).
 
-## Extending the App
+### Back-End
+We use [NextJS API Routes](https://nextjs.org/docs/api-routes/introduction) for our API layer and translate a post request body into instructions for operating on the database. A response is crafted and sent back to the front end. Our database API is here [pages/api/db.api.ts](pages/api/db.api.ts)
 
-Future considerations could be persisting data to a cloud database like firebase and hooking up a Typesense node for React InstanSearch.
+### Front-End
+For the front end, the app uses NextJS. NextJS is a full-stack framework that offers pre-configured React and Typescript support. The framework allows us to write our front-end and back-end code using the same programming language. The most significant benefit of creating an app using NextJS is the ability to share library code and type declarations between front-end and back-end code. Another advantage is rendering our data into the front-end page if we desire on the server.
+
+
+## Development
+
+Clone the git repository
+```bash
+git clone https://github.com/njmaeff/minventory
+```
+
+Install dependencies
+```bash
+yarn install
+```
+
+Add the seed data
+```bash
+yarn seed
+```
+
+Start the application in development mode.
+```bash
+yarn dev
+```
+
+
+## Next Steps
