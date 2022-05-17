@@ -1,6 +1,6 @@
 import {Meta} from "./lib/meta";
 import {Page} from "./lib/page";
-import {EditableTable} from "./lib/table";
+import {InventoryTable} from "./lib/inventoryTable";
 import {useOrm} from "./lib/hooks/useOrm";
 import {Spinner} from "./lib/spinner";
 
@@ -12,7 +12,7 @@ export default () => {
         <Meta title={'Inventory'}/>
         <Page>
             {inventoryGetAll.isSuccess ?
-                <EditableTable
+                <InventoryTable
                     initialData={data.sort((a, b) => a.date <= b.date ? 1 : -1)}/> :
                 <Spinner/>}
         </Page>

@@ -63,5 +63,18 @@ Start the application.
 yarn dev
 ```
 
+## Maintenance
+
+There are two scripts you can use for maintenance:
+
+Backup the database
+```bash
+yarn backup backup.json
+```
+
+Restore the database
+```bash
+yarn restore backup.json
+```
 
 ## Next Steps

@@ -59,7 +59,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
     );
 };
 
-export const EditableTable: React.FC<{ initialData: Item[] }> = ({initialData}) => {
+export const InventoryTable: React.FC<{ initialData: Item[] }> = ({initialData}) => {
     const [form] = Form.useForm<Omit<Item, 'key'>>();
     const [editingKey, setEditingKey] = useState('');
     const [removeItem, setRemoveItem] = useState<Item>(null)
