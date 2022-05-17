@@ -2,27 +2,11 @@ import faker from "@faker-js/faker"
 import {DbLocal} from "./dbLocal";
 import {Client} from "@replit/database";
 import {Orm} from "../../lib/db/orm";
+import {Models} from "../../lib/types";
 import {ReplitClient} from "../../lib/db/replitClient";
 import {range} from "lodash";
 
 faker.seed(19)
-
-interface Models {
-    inventory: {
-        name: string
-        description: string
-        sku: string
-        price: string
-    }
-
-    history: {
-        comment?: string
-        date: number
-        model: keyof Models
-        record: Models[keyof Models] & { id: string }
-        operation: 'edit' | 'create' | 'delete'
-    }
-}
 
 const client = process.env.NODE_ENV === 'development' ? new DbLocal() : new Client()
 const orm = new Orm<Models>(client as ReplitClient)

@@ -86,7 +86,7 @@ export default async ({body}: DBApiInterface, res: NextApiResponse) => {
             return res.json(data)
         }
         case "list": {
-            const data = await db.list()
+            const data = await db.list(body.prefix)
             return res.json(data)
         }
         case "set": {

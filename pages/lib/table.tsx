@@ -9,25 +9,10 @@ import {
     Table,
     Typography
 } from 'antd';
+import {useOrm} from "./hooks/useOrm";
+import {Doc} from "./types";
 
-interface Item {
-    key: string;
-    name: string;
-    description: string;
-    sku: string
-    price: number;
-}
-
-const originData: Item[] = [];
-for (let i = 0; i < 100; i++) {
-    originData.push({
-        key: i.toString(),
-        name: `Edrward ${i}`,
-        description: `London Park no. ${i}`,
-        price: 32,
-        sku: `${i}`,
-    });
-}
+type Item = Doc<'inventory'>
 
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
     editing: boolean;
@@ -75,33 +60,44 @@ const EditableCell: React.FC<EditableCellProps> = ({
 
 export const EditableTable = () => {
     const [form] = Form.useForm<Omit<Item, 'key'>>();
-    const [data, setData] = useState(originData);
     const [editingKey, setEditingKey] = useState('');
     const [removeItem, setRemoveItem] = useState(null)
 
-    const isEditing = (record: Item) => record.key === editingKey;
+    const inventoryModel = useOrm('inventory')
+    const [data, setData] = useState([]);
+    const inventoryGetAll = inventoryModel.useGetAll({
+        onSuccess: data => setData(data.map((item) => ({
+            ...item,
+            key: item.id
+        })))
+    })
 
-    const edit = (record: Partial<Item> & { key: React.Key }) => {
+    const writeInventory = inventoryModel.useWrite()
+
+
+    const isEditing = (record: Item) => record.id === editingKey;
+
+    const edit = (record: Partial<Item>) => {
         form.setFieldsValue({
             name: '',
             description: '',
             sku: '',
-            price: 0,
+            price: '0',
             ...record
         });
-        setEditingKey(record.key);
+        setEditingKey(record.id);
     };
 
     const cancel = () => {
         setEditingKey('');
     };
 
-    const save = async (key: React.Key) => {
+    const save = async (id) => {
         try {
             const row = (await form.validateFields()) as Item;
 
             const newData = [...data];
-            const index = newData.findIndex(item => key === item.key);
+            const index = newData.findIndex(item => id === item.key);
             if (index > -1) {
                 const item = newData[index];
                 newData.splice(index, 1, {
@@ -150,7 +146,7 @@ export const EditableTable = () => {
                 return <Space size={'small'}>
                     {isEditing(record) ? (
                         <span>
-            <Typography.Link onClick={() => save(record.key)}>
+            <Typography.Link onClick={() => save(record.id)}>
               Save
             </Typography.Link>
             <Typography.Link onClick={() => cancel()}>
