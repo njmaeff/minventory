@@ -29,19 +29,28 @@ Clone the git repository
 git clone https://github.com/njmaeff/minventory
 ```
 
-Install dependencies
+Install dependencies.
 ```bash
 yarn install
 ```
 
-Add the seed data
+Add the seed data.
 ```bash
+# for local develoment
+yarn seed-dev
+
+# on replit/production
 yarn seed
 ```
 
-Start the application in development mode.
+Start the application.
 ```bash
+# run in development mode
 yarn dev
+
+# run in production mode 
+yarn build && yarn start
+
 ```
 
 

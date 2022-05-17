@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "build-styles": "yarn lessc --js pages/lib/styles/antd.less pages/lib/styles/antd.css",
-    "seed": "rm db.json; NODE_ENV=development node -r ts-node/register/transpile-only pages/api/lib/seed.ts"
+    "seed-dev": "rm db.json; NODE_ENV=development node -r ts-node/register/transpile-only pages/api/lib/seed.ts",
+    "seed": "node -r ts-node/register/transpile-only pages/api/lib/seed.ts"
   },
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
