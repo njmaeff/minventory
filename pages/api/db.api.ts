@@ -101,5 +101,5 @@ export default async ({body}: DBApiInterface, res: NextApiResponse) => {
             throw new Error('Unsupported Method')
     }
 
-    res.end({})
+    res.json({})
 };

@@ -73,6 +73,7 @@ export const EditableTable = () => {
     })
 
     const writeInventory = inventoryModel.useWrite()
+    const removeInventory = inventoryModel.useDelete()
 
 
     const isEditing = (record: Item) => record.id === editingKey;
@@ -94,23 +95,24 @@ export const EditableTable = () => {
 
     const save = async (id) => {
         try {
-            const row = (await form.validateFields()) as Item;
-
+            let row = (await form.validateFields()) as Item;
             const newData = [...data];
             const index = newData.findIndex(item => id === item.key);
-            if (index > -1) {
-                const item = newData[index];
-                newData.splice(index, 1, {
-                    ...item,
-                    ...row,
-                });
-                setData(newData);
-                setEditingKey('');
-            } else {
-                newData.push(row);
-                setData(newData);
-                setEditingKey('');
+            const {key, ...item} = newData[index];
+
+            const update = {
+                ...item,
+                ...row,
             }
+
+            writeInventory.mutate(update, {
+                onSuccess: (id) => {
+                    newData.splice(index, 1, {...update, key: id, id: id});
+                    setData(newData);
+                    setEditingKey('');
+                },
+            })
+
         } catch (errInfo) {
             console.log('Validate Failed:', errInfo);
         }
