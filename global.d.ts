@@ -28,6 +28,10 @@ module "*.mdx" {
     const kind: any;
     export default kind;
 }
+module "*.md" {
+    const kind: any;
+    export default kind;
+}
 
 module "*.pdf" {
     const kind: string;

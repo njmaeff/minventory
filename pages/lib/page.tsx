@@ -2,6 +2,7 @@ import {Layout, Menu, Typography} from 'antd';
 import {
     GithubOutlined,
     HistoryOutlined,
+    QuestionCircleOutlined,
     ToolOutlined,
 } from '@ant-design/icons';
 import React, {useState} from "react";
@@ -33,6 +34,12 @@ export const Page: React.FC = ({children}) => {
                               key: '/history',
                               icon: <HistoryOutlined/>,
                               onClick: () => router.push('/history')
+                          },
+                          {
+                              label: 'About',
+                              key: '/about',
+                              icon: <QuestionCircleOutlined/>,
+                              onClick: () => router.push('/about')
                           }
                       ]}/>
             </Sider>
