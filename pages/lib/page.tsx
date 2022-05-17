@@ -13,6 +13,7 @@ export const Page: React.FC = ({children}) => {
         <Layout style={{minHeight: '100vh'}} hasSider={true}>
             <Sider collapsible collapsed={collapsed}
                    onCollapse={() => setCollapse(!collapsed)}>
+
                 <Menu theme="dark" defaultSelectedKeys={[router.asPath]}
                       mode="inline"
                       items={[
@@ -31,7 +32,6 @@ export const Page: React.FC = ({children}) => {
                       ]}/>
             </Sider>
             <Layout>
-                <Header/>
                 <Content>
                     {children}
                 </Content>
