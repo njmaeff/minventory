@@ -1,13 +1,65 @@
 import faker from "@faker-js/faker"
 import {DbLocal} from "./dbLocal";
 import {Client} from "@replit/database";
+import {Orm} from "../../lib/db/orm";
+import {ReplitClient} from "../../lib/db/replitClient";
+import {range} from "lodash";
 
 faker.seed(19)
-const db = process.env.NODE_ENV === 'development' ? new DbLocal() : new Client()
 
+interface Models {
+    inventory: {
+        name: string
+        description: string
+        sku: string
+        price: string
+    }
+
+    history: {
+        comment?: string
+        date: number
+        model: keyof Models
+        record: Models[keyof Models] & { id: string }
+        operation: 'edit' | 'create' | 'delete'
+    }
+}
+
+const client = process.env.NODE_ENV === 'development' ? new DbLocal() : new Client()
+const orm = new Orm<Models>(client as ReplitClient)
+
+const makeInventory = () => ({
+    name: faker.vehicle.vehicle(),
+    description: faker.lorem.lines(1),
+    sku: faker.vehicle.model(),
+    price: faker.commerce.price(30000, 80000, 2,)
+})
 
 const seed = async () => {
 
+    const inventory = orm.collection('inventory')
+    const history = orm.collection('history');
+
+    await Promise.all(
+        range(25).map(() => {
+            inventory.write(makeInventory())
+        })
+    );
+
+    await Promise.all(
+        range(10).map(() => {
+
+            return history.write({
+                comment: faker.lorem.lines(3),
+                date: faker.date.past(1).getDate(),
+                model: 'inventory',
+                operation: 'delete',
+                record: {
+                    ...makeInventory(),
+                    id: faker.datatype.uuid()
+                }
+            })
+        })
+    );
 };
 
 export const run = async () => {

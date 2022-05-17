@@ -1,5 +1,5 @@
 export interface ReplitClient {
-    get(key: string, options?: { raw?: boolean }): Promise<unknown>;
+    get(key: string, options?: { raw?: boolean }): Promise<any>;
 
     set(key: string, value: any): Promise<this>;
 

@@ -5,12 +5,12 @@ import {readFileSync, writeFileSync} from "fs"
 const dbFile = path.join(process.cwd(), 'db.json')
 const readDBFile = () => {
     try {
-        JSON.parse(readFileSync(dbFile, 'utf8'))
+        return JSON.parse(readFileSync(dbFile, 'utf8'))
     } catch (e) {
         return {}
     }
 }
-const writeDBFile = (file) => writeFileSync(dbFile, JSON.stringify(file), 'utf8')
+const writeDBFile = (file) => writeFileSync(dbFile, JSON.stringify(file, null, 2), 'utf8')
 
 export class DbLocal implements ReplitClient {
     async delete(key: string) {
