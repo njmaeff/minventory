@@ -12,6 +12,7 @@ import {
 } from 'antd';
 import {useOrm} from "./hooks/useOrm";
 import {Doc} from "./types";
+import {css} from '@emotion/react';
 
 type Item = Doc<'inventory'>
 
@@ -190,7 +191,11 @@ export const InventoryTable: React.FC<{ initialData: Item[] }> = ({initialData})
 
     return (
         <>
-            <Button onClick={() => setAddItem(true)}>Add Item</Button>
+            <Button type={'primary'} css={
+                css`
+                    margin: 0.5rem;
+                `
+            } onClick={() => setAddItem(true)}>Add Item</Button>
             <AddItemModal
                 visible={addItem}
                 onCancel={() => setAddItem(false)}
