@@ -3,7 +3,7 @@ import {Orm} from "../../lib/db/orm";
 import {Models} from "../../lib/types";
 import {ReplitClient} from "../../lib/db/types";
 import {range} from "lodash";
-import {db} from "./dbClient";
+import {db} from "../lib/dbClient";
 
 faker.seed(19)
 

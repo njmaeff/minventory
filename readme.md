@@ -39,7 +39,7 @@ Build the application.
 yarn build
 ```
 
-Click the start button.
+Click the start button (`yarn start`).
 
 ## Local Development
 
