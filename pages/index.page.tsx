@@ -12,10 +12,7 @@ export default () => {
         <Meta title={'Inventory'}/>
         <Page>
             {inventoryGetAll.isSuccess ?
-                <EditableTable initialData={data.map((item) => ({
-                    ...item,
-                    key: item.id
-                }))}/> : <Spinner/>}
+                <EditableTable initialData={data}/> : <Spinner/>}
         </Page>
     </>
 };

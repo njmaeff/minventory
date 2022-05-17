@@ -39,7 +39,7 @@ const seed = async () => {
                 operation: 'delete',
                 record: {
                     ...makeInventory(),
-                    id: faker.datatype.uuid()
+                    key: faker.datatype.uuid()
                 }
             })
         })

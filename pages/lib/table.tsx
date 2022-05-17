@@ -12,7 +12,7 @@ import {
 import {useOrm} from "./hooks/useOrm";
 import {Doc} from "./types";
 
-type Item = Doc<'inventory'> & { key: React.Key }
+type Item = Doc<'inventory'>
 
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
     editing: boolean;
@@ -70,7 +70,7 @@ export const EditableTable: React.FC<{ initialData: Item[] }> = ({initialData}) 
     const removeInventory = inventoryModel.useDelete()
 
 
-    const isEditing = (record: Item) => record.id === editingKey;
+    const isEditing = (record: Item) => record.key === editingKey;
 
     const edit = (record: Partial<Item>) => {
         form.setFieldsValue({
@@ -80,7 +80,7 @@ export const EditableTable: React.FC<{ initialData: Item[] }> = ({initialData}) 
             price: '0',
             ...record
         });
-        setEditingKey(record.id);
+        setEditingKey(record.key);
     };
 
     const cancel = () => {
@@ -92,16 +92,14 @@ export const EditableTable: React.FC<{ initialData: Item[] }> = ({initialData}) 
             let row = (await form.validateFields()) as Item;
             const newData = [...data];
             const index = newData.findIndex(item => id === item.key);
-            const {key, ...item} = newData[index];
-
             const update = {
-                ...item,
+                ...newData[index],
                 ...row,
             }
 
             writeInventory.mutate(update, {
-                onSuccess: (id) => {
-                    newData.splice(index, 1, {...update, key: id, id: id});
+                onSuccess: () => {
+                    newData.splice(index, 1, update);
                     setData(newData);
                     setEditingKey('');
                 },
@@ -142,7 +140,7 @@ export const EditableTable: React.FC<{ initialData: Item[] }> = ({initialData}) 
                 return <Space size={'small'}>
                     {isEditing(record) ? (
                         <>
-                            <Typography.Link onClick={() => save(record.id)}>
+                            <Typography.Link onClick={() => save(record.key)}>
                                 Save
                             </Typography.Link>
                             <Typography.Link onClick={() => cancel()}>
@@ -191,7 +189,7 @@ export const EditableTable: React.FC<{ initialData: Item[] }> = ({initialData}) 
                     visible={!!removeItem}
                     onCancel={() => setRemoveItem(null)}
                     onOk={({comment}) => {
-                        removeInventory.mutate(removeItem.id, {
+                        removeInventory.mutate(removeItem.key, {
                             onSuccess: async () => {
                                 await historyModel.write({
                                     record: removeItem,
@@ -202,7 +200,7 @@ export const EditableTable: React.FC<{ initialData: Item[] }> = ({initialData}) 
                                 })
                                 setRemoveItem(null)
                                 setData(prev => {
-                                    const index = prev.findIndex((item) => item.id === removeItem.id)
+                                    const index = prev.findIndex((item) => item.key === removeItem.key)
                                     const clone = [...prev]
                                     clone.splice(index, 1)
                                     return clone

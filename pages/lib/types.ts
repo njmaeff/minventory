@@ -10,9 +10,9 @@ export interface Models {
         comment?: string
         date: number
         model: keyof Models
-        record: Models[keyof Models] & { id: string }
+        record: Models[keyof Models] & { key: string }
         operation: 'edit' | 'create' | 'delete'
     }
 }
 
-export type Doc<T extends keyof Models> = Models[T] & { id: string }
+export type Doc<T extends keyof Models> = Models[T] & { key: string }

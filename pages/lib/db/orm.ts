@@ -1,7 +1,7 @@
 import {ReplitClient} from "./replitClient";
 import {v4 as uuidV4} from "uuid"
 
-export class Orm<T extends Record<string, any>, Doc extends { id: string } = (T & { id: string })> {
+export class Orm<T extends Record<string, any>, Doc extends { key: string } = (T & { key: string })> {
 
     collection<P extends keyof T>(collection: P) {
         this.validateCollection(collection)
@@ -34,10 +34,10 @@ export class Orm<T extends Record<string, any>, Doc extends { id: string } = (T 
         return list.map((key) => key.replace(`${collectionPrefix}/`, ''))
     }
 
-    async write({id, ...value}: Omit<Doc, 'id'> & { id?: string }) {
-        id = id ?? uuidV4()
-        await this.client.set(this.prefix(id), {id, ...value});
-        return id
+    async write({key, ...value}: Omit<Doc, 'key'> & { key?: string }) {
+        key = key ?? uuidV4()
+        await this.client.set(this.prefix(key), {key, ...value});
+        return key
     }
 
     protected validateCollection(collection) {
