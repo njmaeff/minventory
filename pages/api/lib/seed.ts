@@ -34,7 +34,7 @@ const seed = async () => {
 
             return history.write({
                 comment: faker.lorem.lines(3),
-                date: faker.date.past(1).getDate(),
+                date: faker.date.past(1).getTime(),
                 model: 'inventory',
                 operation: 'delete',
                 record: {

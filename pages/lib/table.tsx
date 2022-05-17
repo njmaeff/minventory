@@ -194,7 +194,7 @@ export const EditableTable: React.FC<{ initialData: Item[] }> = ({initialData}) 
                                 await historyModel.write({
                                     record: removeItem,
                                     model: 'inventory',
-                                    date: new Date().getDate(),
+                                    date: new Date().getTime(),
                                     comment,
                                     operation: 'delete'
                                 })
