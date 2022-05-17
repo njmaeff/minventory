@@ -1,14 +1,14 @@
-import {Api} from "../db/api";
+import {Orm} from "../db/orm";
 import {useMutation, useQuery} from "react-query";
 
-export class ApiReact<T, P extends keyof T> extends Api {
+export class ApiReact<T, P extends keyof T> extends Orm {
     useGet(key: string, opts) {
         return useQuery(this.prefix(key), () => this.get(key), opts)
     }
 
 
     useSet(key: string, opts) {
-        return useMutation(this.prefix(key), (value) => this.set(key, value), opts)
+        return useMutation(this.prefix(key), (value) => this.write(key, value), opts)
     }
 
 
