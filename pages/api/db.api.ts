@@ -1,6 +1,6 @@
 import {NextApiResponse} from "next";
-import {DbLocal} from "./lib/dbLocal";
-import {Client} from "@replit/database";
+import {db} from "./lib/dbClient";
+
 
 export interface DeleteBody {
     method: 'delete'
@@ -58,8 +58,6 @@ export interface DBApiInterface extends NextApiResponse {
 
 
 }
-
-const db = process.env.NODE_ENV === 'development' ? new DbLocal() : new Client()
 
 
 export default async ({body}: DBApiInterface, res: NextApiResponse) => {

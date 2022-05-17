@@ -1,15 +1,13 @@
 import faker from "@faker-js/faker"
-import {DbLocal} from "./dbLocal";
-import {Client} from "@replit/database";
 import {Orm} from "../../lib/db/orm";
 import {Models} from "../../lib/types";
 import {ReplitClient} from "../../lib/db/types";
 import {range} from "lodash";
+import {db} from "./dbClient";
 
 faker.seed(19)
 
-const client = process.env.NODE_ENV === 'development' ? new DbLocal() : new Client()
-const orm = new Orm<Models>(client as ReplitClient)
+const orm = new Orm<Models>(db as ReplitClient)
 
 const makeInventory = () => {
     return {
