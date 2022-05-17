@@ -31,7 +31,7 @@ export class Orm<T extends Record<string, any>, Doc extends { key: string } = (T
     async list(): Promise<string[]> {
         const collectionPrefix = this.prefix()
         const list = await this.client.list(collectionPrefix)
-        return list.map((key) => key.replace(`${collectionPrefix}/`, ''))
+        return list.map((key) => key.replace(`${collectionPrefix}+`, ''))
     }
 
     async write({key, ...value}: Omit<Doc, 'key'> & { key?: string }) {
@@ -41,13 +41,13 @@ export class Orm<T extends Record<string, any>, Doc extends { key: string } = (T
     }
 
     protected validateCollection(collection) {
-        if (/\//.test(collection)) {
-            throw new Error('You may not use a forward slash (/) in a collection name')
+        if (/\+/.test(collection)) {
+            throw new Error('You may not use a plus (+) in a collection name')
         }
     }
 
     protected prefix(...paths) {
-        return [this.namespace, ...paths].join(`/`)
+        return [this.namespace, ...paths].join(`+`)
     }
 
     constructor(
