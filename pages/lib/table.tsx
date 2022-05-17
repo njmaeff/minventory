@@ -4,6 +4,7 @@ import {
     Form,
     Input,
     InputNumber,
+    message,
     Modal,
     Space,
     Table,
@@ -107,6 +108,7 @@ export const EditableTable: React.FC<{ initialData: Item[] }> = ({initialData}) 
             newData.splice(index, 1, update);
             setData(newData);
             setEditingKey('');
+            message.success('Item Saved')
 
         } catch (errInfo) {
             console.log('Validate Failed:', errInfo);
@@ -205,6 +207,7 @@ export const EditableTable: React.FC<{ initialData: Item[] }> = ({initialData}) 
                     })
                     setData(prev => [record, ...prev])
                     setAddItem(false)
+                    message.success('Item Added')
                 }}
                 title={'Add New Item'}
             />
@@ -227,6 +230,7 @@ export const EditableTable: React.FC<{ initialData: Item[] }> = ({initialData}) 
                         clone.splice(index, 1)
                         return clone
                     })
+                    message.success('Item Removed')
                 }}
                 title={`Remove ${removeItem?.name}?`}
             />
