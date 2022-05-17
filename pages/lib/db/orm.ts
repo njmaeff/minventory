@@ -1,7 +1,7 @@
 import {ReplitClient} from "./replitClient";
 import {v4 as uuidV4} from "uuid"
 
-export class Orm<T extends Record<string, any>, Doc extends { id?: string } = (T & { id?: string })> {
+export class Orm<T extends Record<string, any>, Doc extends { id?: string } = (T & { id: string })> {
 
     collection<P extends keyof T>(collection: P) {
         this.validateCollection(collection)

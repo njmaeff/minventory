@@ -12,7 +12,7 @@ import {
 import {useOrm} from "./hooks/useOrm";
 import {Doc} from "./types";
 
-type Item = Doc<'inventory'>
+type Item = Doc<'inventory'> & { key: React.Key }
 
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
     editing: boolean;
@@ -58,20 +58,13 @@ const EditableCell: React.FC<EditableCellProps> = ({
     );
 };
 
-export const EditableTable = () => {
+export const EditableTable: React.FC<{ initialData: Item[] }> = ({initialData}) => {
     const [form] = Form.useForm<Omit<Item, 'key'>>();
     const [editingKey, setEditingKey] = useState('');
-    const [removeItem, setRemoveItem] = useState(null)
+    const [removeItem, setRemoveItem] = useState<Item>(null)
 
+    const [data, setData] = useState(initialData);
     const inventoryModel = useOrm('inventory')
-    const [data, setData] = useState([]);
-    const inventoryGetAll = inventoryModel.useGetAll({
-        onSuccess: data => setData(data.map((item) => ({
-            ...item,
-            key: item.id
-        })))
-    })
-
     const writeInventory = inventoryModel.useWrite()
     const removeInventory = inventoryModel.useDelete()
 
@@ -194,11 +187,20 @@ export const EditableTable = () => {
             <Button>Add Row</Button>
             <Form form={form} component={false}>
                 <Modal
-                    visible={removeItem}
+                    visible={!!removeItem}
                     onCancel={() => setRemoveItem(null)}
                     onOk={() => {
-
-                        setRemoveItem(null)
+                        removeInventory.mutate(removeItem.id, {
+                            onSuccess: () => {
+                                setRemoveItem(null)
+                                setData(prev => {
+                                    const index = prev.findIndex((item) => item.id === removeItem.id)
+                                    const clone = [...prev]
+                                    clone.splice(index, 1)
+                                    return clone
+                                })
+                            },
+                        })
                     }}
                     maskClosable={false}
                     title={'Remove Item?'}
@@ -217,6 +219,7 @@ export const EditableTable = () => {
                     rowClassName="editable-row"
                     pagination={{
                         onChange: cancel,
+                        pageSize: 8,
                     }}
                 />
             </Form>
