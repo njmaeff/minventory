@@ -1,10 +1,22 @@
 # Minventory
 Minventory is a simple application enabling users to create, edit, and remove items. Users can revert edits, deletions, and the creation of inventory items on the history page.
 
+## Usage
+
+### Inventory Tab
+
+- Add a new item by clicking the **Add** button.
+- Edit an existing item by clicking the **Edit** button under **Actions**.
+- Delete an item by clicking the **Remove** button under **Actions**.
+
+### History Tab
+
+- Revert a deleted item by clicking the **Revert** button under **Actions**
+
 
 ## Features
 
-- CRUD (create, read, update, delete) functionality for inventory items
+- **CRUD** (create, read, update, delete) functionality for inventory items.
 - Ability to add comments to a deleted item and revert the deletion.
 
 ## Stack
@@ -24,22 +36,13 @@ For the front end, the app uses NextJS. NextJS is a full-stack framework that of
 
 ## Running on Replit
 
-Install dependencies.
+Manually
 ```bash
-yarn install
+yarn start
+# runs yarn install, yarn seed, yarn build, next start
 ```
 
-Add the seed data.
-```bash
-yarn seed
-```
-
-Build the application.
-```bash
-yarn build
-```
-
-Click the start button.
+Or click the start button.
 
 ## Local Development
 
@@ -76,5 +79,3 @@ Restore the database
 ```bash
 yarn restore backup.json
 ```
-
-## Next Steps
