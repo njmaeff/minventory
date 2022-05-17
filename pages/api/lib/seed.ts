@@ -60,6 +60,7 @@ const seed = async () => {
 
 export const run = async () => {
     try {
+        await db.empty()
         await seed()
         process.exit(0)
     } catch (e) {

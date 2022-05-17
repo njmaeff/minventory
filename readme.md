@@ -22,7 +22,26 @@ We use [NextJS API Routes](https://nextjs.org/docs/api-routes/introduction) for 
 For the front end, the app uses NextJS. NextJS is a full-stack framework that offers pre-configured React and Typescript support. The framework allows us to write our front-end and back-end code using the same programming language. The most significant benefit of creating an app using NextJS is the ability to share library code and type declarations between front-end and back-end code. Another advantage is rendering our data into the front-end page if we desire on the server.
 
 
-## Development
+## Running on Replit
+
+Install dependencies.
+```bash
+yarn install
+```
+
+Add the seed data.
+```bash
+yarn seed
+```
+
+Build the application.
+```bash
+yarn build
+```
+
+Click the start button.
+
+## Local Development
 
 Clone the git repository
 ```bash
@@ -36,21 +55,12 @@ yarn install
 
 Add the seed data.
 ```bash
-# for local develoment
 yarn seed-dev
-
-# on replit/production
-yarn seed
 ```
 
 Start the application.
 ```bash
-# run in development mode
 yarn dev
-
-# run in production mode 
-yarn build && yarn start
-
 ```
 
 
