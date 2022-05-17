@@ -29,6 +29,10 @@ export default () => {
                         dataIndex: 'model'
                     },
                     {
+                        title: 'Ref',
+                        dataIndex: 'ref'
+                    },
+                    {
                         title: 'Comment',
                         dataIndex: 'comment'
                     },
@@ -50,6 +54,7 @@ export default () => {
                                         const model = orm.collection(record.model)
                                         let revertRecord = {
                                             model: record.model,
+                                            ref: record.ref,
                                             date: new Date().getTime(),
                                             comment: 'Revert',
                                         } as Item;

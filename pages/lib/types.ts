@@ -11,6 +11,7 @@ export interface Models {
         comment?: string
         date: number
         model: keyof Models
+        ref?: string
         record?: Models[keyof Models] & { key: string }
         operation: 'edit' | 'create' | 'delete'
     }

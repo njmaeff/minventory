@@ -33,6 +33,7 @@ const seed = async () => {
                 date: record.date,
                 model: 'inventory',
                 operation: 'create',
+                ref: record.name,
                 record: {...record, key}
             })
         })
@@ -41,13 +42,15 @@ const seed = async () => {
     await Promise.all(
         range(10).map(() => {
 
+            const record = makeInventory();
             return history.write({
                 comment: faker.lorem.lines(3),
                 date: faker.date.past(1).getTime(),
                 model: 'inventory',
+                ref: record.name,
                 operation: 'delete',
                 record: {
-                    ...makeInventory(),
+                    ...record,
                     key: faker.datatype.uuid()
                 }
             })

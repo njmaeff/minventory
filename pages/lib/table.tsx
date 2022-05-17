@@ -91,19 +91,21 @@ export const EditableTable: React.FC<{ initialData: Item[] }> = ({initialData}) 
             let row = (await form.validateFields()) as Item;
             const newData = [...data];
             const index = newData.findIndex(item => id === item.key);
+            const previousRecord = newData[index];
             const update = {
-                ...newData[index],
+                ...previousRecord,
                 ...row,
                 date: new Date().getTime()
             }
 
             await inventoryModel.write(update)
             await historyModel.write({
-                record: newData[index],
+                record: previousRecord,
                 operation: 'edit',
                 date: update.date,
                 model: 'inventory',
-                comment: 'Edit Item'
+                ref: update.name,
+                comment: `Edit Item ${update.name}`
             })
             newData.splice(index, 1, update);
             setData(newData);
@@ -200,7 +202,8 @@ export const EditableTable: React.FC<{ initialData: Item[] }> = ({initialData}) 
                     })
                     const record = {...item, key}
                     await historyModel.write({
-                        comment: 'New Item',
+                        comment: `New Item ${record.name}`,
+                        ref: record.name,
                         date,
                         model: 'inventory',
                         operation: 'create'
@@ -220,6 +223,7 @@ export const EditableTable: React.FC<{ initialData: Item[] }> = ({initialData}) 
                         record: removeItem,
                         model: 'inventory',
                         date: new Date().getTime(),
+                        ref: removeItem.name,
                         comment,
                         operation: 'delete'
                     })
