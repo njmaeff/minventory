@@ -407,9 +407,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@njmaeff/inventory-mini@workspace:.":
+"@njmaeff/minventory@workspace:.":
   version: 0.0.0-use.local
-  resolution: "@njmaeff/inventory-mini@workspace:."
+  resolution: "@njmaeff/minventory@workspace:."
   dependencies:
     "@ant-design/icons": ^4.7.0
     "@emotion/cache": ^11.7.1
