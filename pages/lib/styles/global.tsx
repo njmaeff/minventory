@@ -23,7 +23,6 @@ export const GlobalStyles = () => {
         }
 
         body {
-            max-width: 960px;
             margin: 0 auto;
             height: auto;
             /* https://stackoverflow.com/questions/46167604/ios-html-disable-double-tap-to-zoom */
