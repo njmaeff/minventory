@@ -67,9 +67,6 @@ export const EditableTable: React.FC<{ initialData: Item[] }> = ({initialData}) 
     const [data, setData] = useState(initialData);
     const inventoryModel = useOrm('inventory')
     const historyModel = useOrm('history')
-    const writeInventory = inventoryModel.useWrite()
-    const removeInventory = inventoryModel.useDelete()
-
 
     const isEditing = (record: Item) => record.key === editingKey;
 
@@ -98,13 +95,10 @@ export const EditableTable: React.FC<{ initialData: Item[] }> = ({initialData}) 
                 ...row,
             }
 
-            writeInventory.mutate(update, {
-                onSuccess: () => {
-                    newData.splice(index, 1, update);
-                    setData(newData);
-                    setEditingKey('');
-                },
-            })
+            await inventoryModel.write(update)
+            newData.splice(index, 1, update);
+            setData(newData);
+            setEditingKey('');
 
         } catch (errInfo) {
             console.log('Validate Failed:', errInfo);
@@ -189,15 +183,16 @@ export const EditableTable: React.FC<{ initialData: Item[] }> = ({initialData}) 
                 visible={addItem}
                 onCancel={() => setAddItem(false)}
                 onOk={async (item) => {
-                    await inventoryModel.write(item)
+                    const key = await inventoryModel.write(item)
+                    const record = {...item, key}
                     await historyModel.write({
-                        record: item,
+                        record,
                         comment: 'New Item',
                         date: new Date().getTime(),
                         model: 'inventory',
                         operation: 'create'
                     })
-                    setData(prev => [item, ...prev])
+                    setData(prev => [record, ...prev])
                     setAddItem(false)
                 }}
                 title={'Add New Item'}
@@ -205,24 +200,21 @@ export const EditableTable: React.FC<{ initialData: Item[] }> = ({initialData}) 
             <CommentModal
                 visible={!!removeItem}
                 onCancel={() => setRemoveItem(null)}
-                onOk={({comment}) => {
-                    removeInventory.mutate(removeItem.key, {
-                        onSuccess: async () => {
-                            await historyModel.write({
-                                record: removeItem,
-                                model: 'inventory',
-                                date: new Date().getTime(),
-                                comment,
-                                operation: 'delete'
-                            })
-                            setRemoveItem(null)
-                            setData(prev => {
-                                const index = prev.findIndex((item) => item.key === removeItem.key)
-                                const clone = [...prev]
-                                clone.splice(index, 1)
-                                return clone
-                            })
-                        },
+                onOk={async ({comment}) => {
+                    await inventoryModel.delete(removeItem.key)
+                    await historyModel.write({
+                        record: removeItem,
+                        model: 'inventory',
+                        date: new Date().getTime(),
+                        comment,
+                        operation: 'delete'
+                    })
+                    setRemoveItem(null)
+                    setData(prev => {
+                        const index = prev.findIndex((item) => item.key === removeItem.key)
+                        const clone = [...prev]
+                        clone.splice(index, 1)
+                        return clone
                     })
                 }}
                 title={`Remove ${removeItem?.name}?`}
@@ -267,7 +259,11 @@ export const CommentModal: React.FC<{
     return <Modal
         visible={visible}
         onCancel={onCancel}
-        onOk={async () => onOk(await form.validateFields())}
+        onOk={async () => {
+            const row = await form.validateFields()
+            form.resetFields()
+            onOk(row)
+        }}
         maskClosable={false}
         title={title}
     >
@@ -297,7 +293,11 @@ export const AddItemModal: React.FC<{
     return <Modal
         visible={visible}
         onCancel={onCancel}
-        onOk={async () => onOk(await form.validateFields())}
+        onOk={async () => {
+            const row = await form.validateFields()
+            form.resetFields()
+            onOk(row)
+        }}
         maskClosable={false}
         title={title}
     >
