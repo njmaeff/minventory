@@ -93,6 +93,7 @@ export const EditableTable: React.FC<{ initialData: Item[] }> = ({initialData}) 
             const update = {
                 ...newData[index],
                 ...row,
+                date: new Date().getTime()
             }
 
             await inventoryModel.write(update)
@@ -129,8 +130,8 @@ export const EditableTable: React.FC<{ initialData: Item[] }> = ({initialData}) 
             editable: true,
         },
         {
-            title: 'Operation',
-            dataIndex: 'operation',
+            title: 'Action',
+            dataIndex: 'action',
             render: (_: any, record: Item) => {
                 return <Space size={'small'}>
                     {isEditing(record) ? (
@@ -183,10 +184,12 @@ export const EditableTable: React.FC<{ initialData: Item[] }> = ({initialData}) 
                 visible={addItem}
                 onCancel={() => setAddItem(false)}
                 onOk={async (item) => {
-                    const key = await inventoryModel.write(item)
+                    const key = await inventoryModel.write({
+                        ...item,
+                        date: new Date().getTime()
+                    })
                     const record = {...item, key}
                     await historyModel.write({
-                        record,
                         comment: 'New Item',
                         date: new Date().getTime(),
                         model: 'inventory',

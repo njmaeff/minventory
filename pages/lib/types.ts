@@ -1,6 +1,7 @@
 export interface Models {
     inventory: {
         name: string
+        date: number
         description: string
         sku: string
         price: string
@@ -10,7 +11,7 @@ export interface Models {
         comment?: string
         date: number
         model: keyof Models
-        record: Models[keyof Models] & { key: string }
+        record?: Models[keyof Models] & { key: string }
         operation: 'edit' | 'create' | 'delete'
     }
 }

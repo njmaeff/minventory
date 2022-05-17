@@ -14,6 +14,7 @@ const orm = new Orm<Models>(client as ReplitClient)
 const makeInventory = () => ({
     name: faker.vehicle.vehicle(),
     description: faker.lorem.lines(1),
+    date: faker.date.past(1).getTime(),
     sku: faker.vehicle.model(),
     price: faker.commerce.price(30000, 80000, 2,)
 })
