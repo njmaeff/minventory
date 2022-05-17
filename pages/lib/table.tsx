@@ -62,6 +62,7 @@ export const EditableTable: React.FC<{ initialData: Item[] }> = ({initialData}) 
     const [form] = Form.useForm<Omit<Item, 'key'>>();
     const [editingKey, setEditingKey] = useState('');
     const [removeItem, setRemoveItem] = useState<Item>(null)
+    const [addItem, setAddItem] = useState(false)
 
     const [data, setData] = useState(initialData);
     const inventoryModel = useOrm('inventory')
@@ -134,7 +135,7 @@ export const EditableTable: React.FC<{ initialData: Item[] }> = ({initialData}) 
             editable: true,
         },
         {
-            title: 'operation',
+            title: 'Operation',
             dataIndex: 'operation',
             render: (_: any, record: Item) => {
                 return <Space size={'small'}>
@@ -183,33 +184,50 @@ export const EditableTable: React.FC<{ initialData: Item[] }> = ({initialData}) 
 
     return (
         <>
-            <Button>Add Row</Button>
+            <Button onClick={() => setAddItem(true)}>Add Item</Button>
+            <AddItemModal
+                visible={addItem}
+                onCancel={() => setAddItem(false)}
+                onOk={async (item) => {
+                    await inventoryModel.write(item)
+                    await historyModel.write({
+                        record: item,
+                        comment: 'New Item',
+                        date: new Date().getTime(),
+                        model: 'inventory',
+                        operation: 'create'
+                    })
+                    setData(prev => [item, ...prev])
+                    setAddItem(false)
+                }}
+                title={'Add New Item'}
+            />
+            <CommentModal
+                visible={!!removeItem}
+                onCancel={() => setRemoveItem(null)}
+                onOk={({comment}) => {
+                    removeInventory.mutate(removeItem.key, {
+                        onSuccess: async () => {
+                            await historyModel.write({
+                                record: removeItem,
+                                model: 'inventory',
+                                date: new Date().getTime(),
+                                comment,
+                                operation: 'delete'
+                            })
+                            setRemoveItem(null)
+                            setData(prev => {
+                                const index = prev.findIndex((item) => item.key === removeItem.key)
+                                const clone = [...prev]
+                                clone.splice(index, 1)
+                                return clone
+                            })
+                        },
+                    })
+                }}
+                title={`Remove ${removeItem?.name}?`}
+            />
             <Form form={form} component={false}>
-                <CommentModal
-                    visible={!!removeItem}
-                    onCancel={() => setRemoveItem(null)}
-                    onOk={({comment}) => {
-                        removeInventory.mutate(removeItem.key, {
-                            onSuccess: async () => {
-                                await historyModel.write({
-                                    record: removeItem,
-                                    model: 'inventory',
-                                    date: new Date().getTime(),
-                                    comment,
-                                    operation: 'delete'
-                                })
-                                setRemoveItem(null)
-                                setData(prev => {
-                                    const index = prev.findIndex((item) => item.key === removeItem.key)
-                                    const clone = [...prev]
-                                    clone.splice(index, 1)
-                                    return clone
-                                })
-                            },
-                        })
-                    }}
-                    title={`Remove ${removeItem?.name}?`}
-                />
                 <Table
                     components={{
                         body: {
@@ -257,6 +275,48 @@ export const CommentModal: React.FC<{
             <Form.Item name={'comment'} label={'Comment'}
                        rules={[{required: true}]}>
                 <Input.TextArea/>
+            </Form.Item>
+        </Form>
+    </Modal>
+};
+
+export const AddItemModal: React.FC<{
+    visible: boolean,
+    onCancel: () => void,
+    onOk: (item: Item) => void,
+    title: string;
+}> = ({
+          onCancel,
+          onOk,
+          title,
+          visible
+      }) => {
+
+    const [form] = Form.useForm<Item>()
+
+    return <Modal
+        visible={visible}
+        onCancel={onCancel}
+        onOk={async () => onOk(await form.validateFields())}
+        maskClosable={false}
+        title={title}
+    >
+        <Form form={form}>
+            <Form.Item name={'name'} label={'Name'}
+                       rules={[{required: true}]}>
+                <Input/>
+            </Form.Item>
+            <Form.Item name={'description'} label={'Description'}
+                       rules={[{required: true}]}>
+                <Input.TextArea/>
+            </Form.Item>
+            <Form.Item name={'sku'} label={'SKU'}
+                       rules={[{required: true}]}>
+                <Input/>
+            </Form.Item>
+            <Form.Item name={'price'} label={'Price'}
+                       rules={[{required: true}]}>
+                <Input/>
             </Form.Item>
         </Form>
     </Modal>
