@@ -11,13 +11,15 @@ faker.seed(19)
 const client = process.env.NODE_ENV === 'development' ? new DbLocal() : new Client()
 const orm = new Orm<Models>(client as ReplitClient)
 
-const makeInventory = () => ({
-    name: faker.vehicle.vehicle(),
-    description: faker.lorem.lines(1),
-    date: faker.date.past(1).getTime(),
-    sku: faker.vehicle.model(),
-    price: faker.commerce.price(30000, 80000, 2,)
-})
+const makeInventory = () => {
+    return {
+        name: faker.vehicle.vehicle(),
+        description: faker.lorem.lines(1),
+        date: faker.date.past(1).getTime(),
+        sku: faker.name.firstName(),
+        price: faker.commerce.price(30000, 80000, 2,)
+    }
+}
 
 const seed = async () => {
 
