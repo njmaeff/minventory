@@ -65,6 +65,7 @@ export const EditableTable: React.FC<{ initialData: Item[] }> = ({initialData}) 
 
     const [data, setData] = useState(initialData);
     const inventoryModel = useOrm('inventory')
+    const historyModel = useOrm('history')
     const writeInventory = inventoryModel.useWrite()
     const removeInventory = inventoryModel.useDelete()
 
@@ -186,12 +187,19 @@ export const EditableTable: React.FC<{ initialData: Item[] }> = ({initialData}) 
         <>
             <Button>Add Row</Button>
             <Form form={form} component={false}>
-                <Modal
+                <CommentModal
                     visible={!!removeItem}
                     onCancel={() => setRemoveItem(null)}
-                    onOk={() => {
+                    onOk={({comment}) => {
                         removeInventory.mutate(removeItem.id, {
-                            onSuccess: () => {
+                            onSuccess: async () => {
+                                await historyModel.write({
+                                    record: removeItem,
+                                    model: 'inventory',
+                                    date: new Date().getDate(),
+                                    comment,
+                                    operation: 'delete'
+                                })
                                 setRemoveItem(null)
                                 setData(prev => {
                                     const index = prev.findIndex((item) => item.id === removeItem.id)
@@ -202,11 +210,8 @@ export const EditableTable: React.FC<{ initialData: Item[] }> = ({initialData}) 
                             },
                         })
                     }}
-                    maskClosable={false}
-                    title={'Remove Item?'}
-                >
-                    {removeItem?.name}
-                </Modal>
+                    title={`Remove ${removeItem?.name}?`}
+                />
                 <Table
                     components={{
                         body: {
@@ -225,4 +230,36 @@ export const EditableTable: React.FC<{ initialData: Item[] }> = ({initialData}) 
             </Form>
         </>
     );
+};
+
+
+export type CommentModalType = { comment: string }
+export const CommentModal: React.FC<{
+    visible: boolean,
+    onCancel: () => void,
+    onOk: (item: CommentModalType) => void,
+    title: string;
+}> = ({
+          visible,
+          onCancel,
+          onOk,
+          title
+      }) => {
+
+    const [form] = Form.useForm<CommentModalType>();
+
+    return <Modal
+        visible={visible}
+        onCancel={onCancel}
+        onOk={async () => onOk(await form.validateFields())}
+        maskClosable={false}
+        title={title}
+    >
+        <Form form={form}>
+            <Form.Item name={'comment'} label={'Comment'}
+                       rules={[{required: true}]}>
+                <Input.TextArea/>
+            </Form.Item>
+        </Form>
+    </Modal>
 };
