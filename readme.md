@@ -36,13 +36,16 @@ For the front end, the app uses NextJS. NextJS is a full-stack framework that of
 
 ## Running on Replit
 
-Manually
+Press the **Start** button.
+
+OR
+
+Run manually
 ```bash
 yarn start
 # runs yarn install, yarn seed, yarn build, next start
 ```
 
-Or click the start button.
 
 ## Local Development
 
