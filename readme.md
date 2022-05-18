@@ -1,5 +1,5 @@
 # Minventory
-Minventory is a simple application enabling users to create, edit, and remove items. Users can revert edits, deletions, and the creation of inventory items on the history page.
+Minventory is a simple application enabling users to create, edit, and remove inventory items. Users can revert edits, deletions, and the creation of items on the history page.
 
 ## Usage
 
@@ -43,7 +43,7 @@ OR
 Run manually
 ```bash
 yarn start
-# runs yarn install, yarn seed, yarn build, next start
+# runs yarn build, yarn seed, next start
 ```
 
 
