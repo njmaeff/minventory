@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
-    "start": "yarn install && yarn seed && yarn build && next start",
+    "start": "yarn build && yarn seed && next start",
     "build-styles": "yarn lessc --js pages/lib/styles/antd.less pages/lib/styles/antd.css",
     "seed-dev": "rm db.json; NODE_ENV=development node -r ts-node/register/transpile-only pages/api/scripts/seed.ts",
     "seed": "node -r ts-node/register/transpile-only pages/api/scripts/seed.ts",
